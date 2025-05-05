@@ -8,10 +8,23 @@ class Todo {
     }
 }
   
-class TodoList {
+class Project {
     constructor(title) {
       this.title = title;
       this.todos = [];
+      this.active = false;
+    }
+    setActive() {
+        this.active = true;
+    }
+    setInactive() {
+        this.active = false;
+    }
+    getTitle() {
+        return this.title;
+    }
+    setTitle(title) {
+        this.title = title;
     }
 
     addTodo(todo) {
@@ -32,16 +45,6 @@ class TodoList {
         return this.todos;
     }
 
-    randomizeOrder() {
-        // Fisher-Yates shuffle algorithm
-        for (let i = this.todos.length -1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i+1));
-            let k = this.todos[i];
-            this.todos[i] = this.todos[j];
-            this.todos[j] = k;
-        }
-    }
-
     completeTodo(index) {
         if (index >= 0 && index < this.todos.length) {
             this.todos[index].completed = true;
@@ -49,5 +52,5 @@ class TodoList {
     }
 }
   
-  export  {Todo, TodoList};
+  export  {Todo, Project};
   

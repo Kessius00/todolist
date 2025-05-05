@@ -16,6 +16,7 @@
     "webpack-dev-server": "^5.2.1"
   },
   "dependencies": {
+    "@heroui/checkbox": "^2.3.18",
     "date-fns": "^4.1.0"
   }
 }
