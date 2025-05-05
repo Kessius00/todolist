@@ -8,7 +8,8 @@ class Todo {
   }
   
   class TodoList {
-    constructor() {
+    constructor(title) {
+      this.title = title;
       this.todos = [];
     }
   
@@ -28,6 +29,16 @@ class Todo {
   
     getTodos() {
       return this.todos;
+    }
+
+    randomizeOrder() {
+        // Fisher-Yates shuffle algorithm
+        for (let i = this.todos.length -1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i+1));
+            let k = this.todos[i];
+            this.todos[i] = this.todos[j];
+            this.todos[j] = k;
+          }
     }
   }
   
