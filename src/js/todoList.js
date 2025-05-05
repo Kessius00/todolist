@@ -6,7 +6,7 @@ class Todo {
         this.priority = priority;
         this.completed = false;
     }
-  }
+}
   
 class TodoList {
     constructor(title) {
