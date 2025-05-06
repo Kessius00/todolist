@@ -7,11 +7,11 @@ import trashIcon from '../assets/trash.svg';
 import editIcon from '../assets/edit.svg';
 import {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects} from "./todoList.js";
 import {ToDoElement, DOMToDos} from "./DOMtodosAPI.js";
+import {projectItemClick} from "./eventListeners.js";
 
 
 
 // DOM Elements
-const addProjectBtn = document.querySelector(".add-project-button");
 const projects = document.querySelector(".projects");
 const todoItemsDOM = document.querySelector(".todo-items");
 
@@ -56,9 +56,25 @@ class DOMProjectElement {
         trashBin.classList.add("trash-bin");
         rightProject.appendChild(trashBin);
 
-        // trashBin.addEventListener("click", () => {
-        //     removeProject(projectItem);
-        // });
+        trashBin.addEventListener("click", () => {
+
+            // if (projectItem.classList.contains("active")) {
+            //     dom_projects.activateProjectElement(dom_projects.projectsDiv.firstChild);
+            // }
+            
+            dom_projects.removeProject(projectItem);
+
+            // remove the project from the projectObjects array
+            for (let i = 0; i < projectObjects.length; i++) {
+                if (projectObjects[i].title == projectTitle.textContent) {
+                    projectObjects.splice(i, 1);
+                    break;
+                }
+            }
+
+            projectItemClick();
+        });
+
         // projectEdit.addEventListener("click", () => {
         //     // Project edit
         //     editProject(projectItem);
@@ -101,6 +117,7 @@ class DOMProjects {
         const newProject = new DOMProjectElement(ProjectObject);
         const projectItem = newProject.createProjectElement();
         this.projectsDiv.appendChild(projectItem);
+        this.activateProjectElement(projectItem);
     }
     removeProject(projectElement) {
         // Remove the project from the project list
@@ -123,11 +140,14 @@ class DOMProjects {
     activateProjectElement(projectElement) {
         // This function is called when a project is clicked
         // It sets the clicked project object as active and all others as inactive
+
+        const projectTitle = projectElement.querySelector(".project-title").textContent;
+        
         for (let i = 0; i < projectObjects.length; i++) {
 
             // set all projects to inactive
             projectObjects[i].active = false;
-            if (projectObjects[i].title == projectElement.querySelector(".project-title").textContent) {
+            if (projectObjects[i].title == projectTitle) {
                 // set the clicked project to active
                 projectObjects[i].active = true;
                 
@@ -139,6 +159,7 @@ class DOMProjects {
                 
             }
         }
+        
         // Remove the active class from all project-item elements
         this.projectsDiv.querySelectorAll(".project-item").forEach((item) => {
             item.classList.remove("active");

@@ -71,7 +71,7 @@ class ToDoElement {
         todoTitle.addEventListener("click", () => {
             // Edit title
             console.log("Edit title clicked");
-            editTodo(todoItem);
+            // editTodo(todoItem);
         });
 
         return todoItem;

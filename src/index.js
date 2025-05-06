@@ -8,7 +8,3 @@ import {DOMProjectElement, DOMProjects} from "./js/DOMprojectsAPI.js";
 import {title_event} from "./js/eventListeners.js";
 import {ToDoElement, DOMToDos} from "./js/DOMtodosAPI.js";
 
-
-const projects = document.querySelector(".projects");
-const projectItems = document.querySelectorAll(".project-item");
-const projectTitles = document.querySelectorAll(".project-title");

@@ -106,6 +106,5 @@ function consoleLogProjects() {
 
 // Log the projects and their todos
 // consoleLogProjects();
-
-  export  {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects};
+export  {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects};
   
