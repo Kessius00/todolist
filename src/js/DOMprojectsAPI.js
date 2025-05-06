@@ -7,103 +7,113 @@ import trashIcon from '../assets/trash.svg';
 import editIcon from '../assets/edit.svg';
 import {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects} from "./todoList.js";
 import {ToDoElement, DOMToDos} from "./DOMtodosAPI.js";
-import {projectItemClick} from "./eventListeners.js";
-
-
 
 // DOM Elements
 const projects = document.querySelector(".projects");
 const todoItemsDOM = document.querySelector(".todo-items");
-
-
 class DOMProjectElement {
     constructor(ProjectObject) {
+        this.id = ProjectObject.id;
         this.title = ProjectObject.title;
         this.todos = ProjectObject.todos;
         this.active = ProjectObject.active;
-        this.projectsList = [];
+
         this.projectItem = this.createProjectElement();
     }
-    
+
+    createTitleElement() {
+        const title = document.createElement("h2");
+        title.textContent = this.title;
+        title.classList.add("project-title");
+        return title;
+    }
+
+    createIcon(src, alt, className, handler) {
+        const icon = document.createElement("img");
+        icon.src = src;
+        icon.alt = alt;
+        icon.classList.add(className);
+        icon.addEventListener("click", (e) => {
+            e.stopPropagation();
+            handler();
+        });
+        return icon;
+    }
+
     createProjectElement() {
-        // create a DOM element for the project
+        const item = document.createElement("div");
+        item.classList.add("project-item");
+        item.dataset.projectId = this.id; // Store project ID in data attribute
 
-        const projectItem = document.createElement("div");
-        projectItem.classList.add("project-item");
+        const title = this.createTitleElement();
+        item.appendChild(title);
 
-        // project title
-        const projectTitle = document.createElement("h2");
-        projectTitle.textContent = this.title;
-        projectTitle.classList.add("project-title");
-        projectItem.appendChild(projectTitle);
+        const right = document.createElement("div");
+        right.classList.add("right-project");
 
-        // right side of the project item
-        const rightProject = document.createElement("div");
-        rightProject.classList.add("right-project");
-        projectItem.appendChild(rightProject);
-
-        // edit icon
-        const projectEdit = document.createElement("img");
-        projectEdit.src = editIcon;
-        projectEdit.alt = "Edit Project";
-        projectEdit.classList.add("edit-project");
-        rightProject.appendChild(projectEdit);
-        
-        // trash icon
-        const trashBin = document.createElement('img');
-        trashBin.src = trashIcon;
-        trashBin.alt = "Trash Bin";
-        trashBin.classList.add("trash-bin");
-        rightProject.appendChild(trashBin);
-
-        trashBin.addEventListener("click", () => {
-
-            // if (projectItem.classList.contains("active")) {
-            //     dom_projects.activateProjectElement(dom_projects.projectsDiv.firstChild);
-            // }
-            
-            dom_projects.removeProject(projectItem);
-
-            // remove the project from the projectObjects array
-            for (let i = 0; i < projectObjects.length; i++) {
-                if (projectObjects[i].title == projectTitle.textContent) {
-                    projectObjects.splice(i, 1);
-                    break;
-                }
-            }
-
-            projectItemClick();
+        const editBtn = this.createIcon(editIcon, "Edit Project", "edit-project", () => this.editMode());
+        const trashBtn = this.createIcon(trashIcon, "Trash Bin", "trash-bin", () => {
+            // handle deletion
+            console.log("Project deleted:", this.title);
         });
 
-        // projectEdit.addEventListener("click", () => {
-        //     // Project edit
-        //     editProject(projectItem);
-        // });
-        // projectItem.addEventListener("click", () => {
-        //     if (projectItem.classList.contains("active")) {} else{
-        //     selectProject(projectItem);}
-        // });
-        return projectItem;
-    }
-    setActive() {
-        this.active = true;
-        this.projectItem = this.createProjectElement();
+        right.append(editBtn, trashBtn);
+        item.appendChild(right);
 
+        item.addEventListener("click", () => {
+            // handle activation logic
+            console.log("Project clicked:", this.title);
+        });
+
+        return item;
     }
-    setInactive() {
-        this.active = false;
-        this.projectItem = this.createProjectElement();
+    editMode() {
+        const newTitle = prompt("Enter new project name:", this.title);
+        if (newTitle) {
+            this.saveEdit(newTitle);
+        }
+    }
+    
+
+    saveEdit(newTitle) {
+        this.title = newTitle;
+        console.log("Project title changed to:", this.title);
+
+        const newItem = this.createProjectElement();
+        // this.projectItem.replaceWith(newItem);
+        this.projectItem = newItem;
+        consoleLogProjects();
     }
 
-    // addTodo(todo) {
-    //     if (todo instanceof Todo) {
-    //         this.todos.push(todo);
-    //     } else {
-    //         throw new Error("addTodo expects an instance of Todo");
-    //     }
-    // }
-
+    render(parentElement) {
+        parentElement.appendChild(this.projectItem);
+    }
 }
+
+
+const projectData = new Project("Project 1", [
+    new Todo("Todo 1", "2023-10-01", 2),
+    new Todo("Todo 2", "2023-10-02", 1),
+    new Todo("Todo 3", "2023-10-03", 3),
+    new Todo("Todo 4", "2023-10-04", 1),
+    new Todo("Todo 5", "2023-10-05", 2),
+    new Todo("Todo 6", "2023-10-06", 3)
+]);
+const projectData2 = new Project("Project 2", [
+    new Todo("Todo 7", "2023-10-07", 4),
+    new Todo("Todo 8", "2023-10-08", 5),
+    new Todo("Todo 9", "2023-10-09", 6)
+]);
+
+const projectElement = new DOMProjectElement(projectData);
+const projectElement2 = new DOMProjectElement(projectData2);
+
+
+projectElement.render(projects);
+projectElement2.render(projects);
+
+
+
 
 class DOMProjects {
     // This class is used to create a new project
