@@ -1,13 +1,14 @@
 // import { addProject } from "./oldFiles/staticDOM.js";
 import {DOMProjectElement, DOMProjects, dom_projects} from "./DOMprojectsAPI.js";
+import {ToDoElement, DOMToDos} from "./DOMtodosAPI.js";
 
 
 const projects = document.querySelector(".projects");
 const proj = new DOMProjects(projects);
 
-function title_event(){
-    const projectTitles = document.querySelectorAll(".project-item");
-    projectTitles.forEach((title) => {
+function projectItemClick(){
+    const projectItems = document.querySelectorAll(".project-item");
+    projectItems.forEach((title) => {
         title.addEventListener("click", (event) => {
             // cancel event if it hovered over the title
             if (event.target.classList.contains("trash-bin")) {
@@ -21,10 +22,10 @@ function title_event(){
     });
 };
 
-title_event();
+projectItemClick();
 // console.log(projectTitles);
 
-export {title_event};
+export {projectItemClick};
 
 
 

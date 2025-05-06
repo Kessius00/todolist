@@ -6,12 +6,14 @@
 import trashIcon from '../assets/trash.svg';
 import editIcon from '../assets/edit.svg';
 import {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects} from "./todoList.js";
+import {ToDoElement, DOMToDos} from "./DOMtodosAPI.js";
 
 
 
 // DOM Elements
 const addProjectBtn = document.querySelector(".add-project-button");
 const projects = document.querySelector(".projects");
+const todoItemsDOM = document.querySelector(".todo-items");
 
 
 class DOMProjectElement {
@@ -122,18 +124,28 @@ class DOMProjects {
         // This function is called when a project is clicked
         // It sets the clicked project object as active and all others as inactive
         for (let i = 0; i < projectObjects.length; i++) {
-            console.log(projectObjects[i])
+
+            // set all projects to inactive
             projectObjects[i].active = false;
             if (projectObjects[i].title == projectElement.querySelector(".project-title").textContent) {
+                // set the clicked project to active
                 projectObjects[i].active = true;
+                
+                // refresh the todo list
+                const activeTodosObjectList = projectObjects[i].todos;
+                const activeTodoObjectList = new DOMToDos(todoItemsDOM);
+                activeTodoObjectList.todoList = activeTodosObjectList;
+                activeTodoObjectList.refreshToDoList();
+                
             }
         }
         // Remove the active class from all project-item elements
-        projects.querySelectorAll(".project-item").forEach((item) => {
+        this.projectsDiv.querySelectorAll(".project-item").forEach((item) => {
             item.classList.remove("active");
         });
         // Add the active class to the clicked project-item
         projectElement.classList.add("active");
+        
     }
 
 }
@@ -146,99 +158,7 @@ dom_projects.refreshAllProjectElements(projectObjects)
 // This function is called when the add project button is clicked
 
 
-
-
 export {DOMProjectElement, DOMProjects, dom_projects};
-
-// This function creates a new project and returns the title (when addnewproject is clicked)
-function newProjectSetup(){
-    // This function creates a new project and returns the title
-
-    const projectItem = document.createElement("div");
-    projectItem.classList.add("project-item");
-    let newTitle;
-
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = "todolist title";
-    input.focus();
-
-    input.addEventListener("blur", () => {
-        newTitle = input.value;
-        if (input.parentNode) {
-            input.remove();
-    input.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            newTitle = input.value;
-            if (input.parentNode) {
-                input.remove();
-            }
-        }
-    });
-        }
-    });
-    input.addEventListener("keyup", (event) => {
-        if (event.key === "Escape") {
-            input.remove();
-            removeProject(projectItem);
-        }
-    });
-    return newTitle
-
-
-}
-
-
-// This function is called when the edit button on a project is clicked
-function editProject(projectItem){
-    // This function is called when the edit button on a project is clicked
-    const projectTitle = projectItem.querySelector(".project-title");
-    const oldTitleText = projectTitle.textContent;
-
-    projectTitle.textContent = "";
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = oldTitleText;
-    projectItem.appendChild(input);
-    input.focus();
-
-    input.addEventListener("blur", () => {
-        if (input.parentNode== projectItem) {
-            // If the input is still in the project item, update the title
-            const newTitle = input.value;
-            projectTitle.textContent = newTitle;
-            input.remove();
-        }
-        
-    });
-    input.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            const newTitle = input.value;
-            projectTitle.textContent = newTitle;
-            input.remove();
-        }
-    });
-    input.addEventListener("keyup", (event) => {
-        if (event.key === "Escape") {
-            projectTitle.textContent = oldTitleText;
-            input.remove();
-        }
-    });
-};
-
-
-function selectProject(projectItem){
-
-    const projectItems = document.querySelectorAll(".project-item");
-    projectItems.forEach((item) => {
-        item.classList.remove("active");
-    });
-    projectItem.classList.add("active");
-    activateProject(projectItem)
-
-
-};
-
 
 
 

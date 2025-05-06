@@ -20,7 +20,6 @@ class Project {
       this.active = false;
     }
     
-
     addTodo(todo) {
         if (todo instanceof Todo) {
             this.todos.push(todo);
@@ -28,25 +27,20 @@ class Project {
             throw new Error("addTodo expects an instance of Todo");
         }
     }
-  
     removeTodo(index) {
         if (index >= 0 && index < this.todos.length) {
             this.todos.splice(index, 1);
         }
     }
-  
     getTodos() {
         return this.todos;
     }
-
     sortTodosByDueDate() {
         this.todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
     }
-    
     sortTodosByPriority() {
         this.todos.sort((a, b) => a.priority - b.priority);
     }
-
     completeTodo(index) {
         if (index >= 0 && index < this.todos.length) {
             this.todos[index].completed = true;
