@@ -1,11 +1,28 @@
 // Removed unused 'add' import
 import trashIcon from '../assets/trash.svg';
 import editIcon from '../assets/edit.svg';
-import {Project} from "./todoList.js";
+import {Project} from "../todoList.js";
 
 const projects = document.querySelector(".projects");
 const projectObjects = [];
+projectObjects.push(new Project("Default Project"));
+projectObjects.push(new Project("Default #2 Project"));
+projectObjects[0].active = true;
 
+
+const addProjectBtn = document.querySelector(".add-project-button");
+addProjectBtn.addEventListener("click", () => {
+    // In the DOM
+    const projectTitle = newProjectSetup();
+    const projectItem = projectConstructorDOM(projectTitle);
+    addProject(projectItem);
+
+    const projectInstance = new Project(projectTitle);
+    projectObjects.push(projectInstance);
+    activateProject(projectItem);
+
+    
+});
 
 
 // This function returns a project element
@@ -148,8 +165,6 @@ function selectProject(projectItem){
 
 };
 
-addProject("Default Project");
-addProject("Default #2 Project");
 
 function removeProject(projectItem){
     // Remove the project from the project list
@@ -159,19 +174,6 @@ function removeProject(projectItem){
 export {addProject};
 // ----------------------------------------------------------------
 
-const addProjectBtn = document.querySelector(".add-project-button");
-addProjectBtn.addEventListener("click", () => {
-    // In the DOM
-    const projectTitle = newProjectSetup();
-    const projectItem = projectConstructorDOM(projectTitle);
-    addProject(projectItem);
-
-    const projectInstance = new Project(projectTitle);
-    projectObjects.push(projectInstance);
-    activateProject(projectItem);
-
-    
-});
 
 
 function activateProject(projectItem){
@@ -184,9 +186,7 @@ function activateProject(projectItem){
     console.log(projectObjects)
 }
 
-projectObjects.push(new Project("Default Project"));
-projectObjects.push(new Project("Default #2 Project"));
-projectObjects[0].active = true;
+
 
 function objectActivation(projectItem){
     // This function is called when a project is clicked
