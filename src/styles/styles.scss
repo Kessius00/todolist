@@ -93,6 +93,9 @@ h1{
         // }
 
         &:hover{
+            .trash-bin{
+                display: block;
+            }
             img {
                 @include svg-purply-white;
             }
@@ -143,8 +146,14 @@ img{
 }
 
 .trash-bin{
-    width: 30px;
+    width: 20px;
     height: auto;
+    display: none;
+    &:hover{
+        cursor: pointer;
+        transform: scale(1.3);
+        transition: transform 0.4s;
+    }
 }
 
 .todo-column {

@@ -56,7 +56,7 @@ function renderProjects() {
 renderProjects();
 
 export function renderEvents() {console.log("Events rendered");}
-
+export default renderProjects;
 
 console.log(projectObjects)
 
