@@ -156,6 +156,14 @@ img{
 
     gap: 1rem;
 
+
+
+    .todo-container{
+        @include flex-column;
+        justify-content: space-between;
+        align-items: stretch;
+        height: 100%;
+    }
     .current-project-title{
         margin-bottom: 20px;
         padding: 10px 20px;
@@ -170,6 +178,7 @@ img{
         display: flex;
         justify-content: space-between;
         align-items: center;
+        
 
         &:hover{
             cursor: pointer;
@@ -195,23 +204,53 @@ img{
     
     
     .checkbox{
-        background-color: 'red';
-        width: 20px;
-        height: 20px;
-        border-radius: 40%;
-        border: 2px solid;
+        width: 25px;
+        height: 25px;
+        border-radius: 48%;
+        
     
         &:hover{
             cursor: pointer;
+            background: #E9D8FD;
             transform: scale(1.1);
             transition: transform 0.2s;
         }
         &:active{
             transform: scale(0.9);
+            background: $dark-blue;
         }
     }
 }
 
+button{
+    background: transparent;
+    border: 3px solid $dark-purple;
+    color: $dark-purple;
+    &:hover{
+        background-color: $dark-purple;
+        color: $purply-white;
+        cursor: pointer;
+        transform: scale(1.05);
+        transition: transform 0.1s;
+    }
+    &:active{
+        transform: scale(0.9);
+    }
+    padding: 6px 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+
+button.add-todo{
+    width: 30%;
+    align-self: flex-end;
+    // position: absolute;
+    // bottom: 110px;
+    // right: 0;
+    // left:auto;
+    // top: auto;
+
+}
 
 
 .footer{

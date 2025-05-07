@@ -2,9 +2,12 @@
 import "./styles/reset.css";
 import "./styles/styles.scss";
 
+import {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects} from "./js/classes.js";
+import {renderEvents} from "./js/events.js";
+import {createToDoElement, renderTodos} from "./js/todos.js";
 
-import {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects} from "./js/todoList.js";
-import {DOMProjectElement, DOMProjects} from "./js/DOMprojectsAPI.js";
-import {title_event} from "./js/eventListeners.js";
-import {ToDoElement, DOMToDos} from "./js/DOMtodosAPI.js";
+renderEvents();
+// renderTodos();
+consoleLogProjects();
+
 

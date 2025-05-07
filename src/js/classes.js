@@ -1,75 +1,70 @@
 // This module defines the Todo and Project classes, and functions to manage projects and todos.
 
+const projectObjects = [];
+
+
 // Classes
 class Todo {
     // The constructor takes the title, description, due date, and priority as parameters
     constructor(title, dueDate, priority = 1) {
+        this.id = crypto.randomUUID(); // Generate a unique ID using crypto
         this.title = title;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.project = null; // Initialize project to null
         this.completed = false;
     }
+
 }
 
 class Project {
-    // The constructor takes the title as a parameter
-    // It initializes the title, an empty array for todos, and a boolean for active status
     constructor(title) {
-      this.title = title;
-      this.todos = [];
-      this.active = false;
+        this.id = crypto.randomUUID(); // Generate a unique ID using crypto
+        this.title = title;
+        this.todos = [];
+        this.active = false;
     }
     
     addTodo(todo) {
         if (todo instanceof Todo) {
-            this.todos.push(todo);
+            this.todos.push(todo); // Set the project for the todo
+            todo.project = this;
         } else {
             throw new Error("addTodo expects an instance of Todo");
         }
     }
-    removeTodo(index) {
-        if (index >= 0 && index < this.todos.length) {
+    removeTodo(id) {
+        const index = this.todos.findIndex(todo => todo.id === id);
+        if (index !== -1) {
             this.todos.splice(index, 1);
+        } else {
+            throw new Error(`Todo with id ${id} not found`);
         }
     }
-    getTodos() {
-        return this.todos;
-    }
-    sortTodosByDueDate() {
-        this.todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+    getTodoById(id) {
+        return this.todos.find(todo => todo.id === id);
     }
     sortTodosByPriority() {
         this.todos.sort((a, b) => a.priority - b.priority);
     }
-    completeTodo(index) {
-        if (index >= 0 && index < this.todos.length) {
-            this.todos[index].completed = true;
+    updateTodoById(id, updates) {
+        const todo = this.todos.find(todo => todo.id === id);
+        if (!todo) {
+            throw new Error(`Todo with id ${id} not found`);
+        }
+    
+        // Only update existing properties (safe update)
+        for (const key in updates) {
+            if (key in todo) {
+                todo[key] = updates[key];
+            } else {
+                console.warn(`Property "${key}" does not exist on Todo and was ignored.`);
+            }
         }
     }
+
 }
 
-
-// Example usage
-const projectObjects = [];
-const project1 = new Project("Project 1");
-const project2 = new Project("Project 2");
-projectObjects.push(project1);
-projectObjects.push(project2);
-
-const todo1 = new Todo("Todo 1",  "2023-10-01", 2);
-const todo2 = new Todo("Todo 2", "2023-10-02", 1);
-project1.addTodo(todo1);
-project1.addTodo(todo2);
-project2.addTodo(new Todo("Todo 3",  "2023-10-03", 3));
-project1.completeTodo(0); // Mark the first todo in project1 as completed
-project1.sortTodosByDueDate(); // Sort todos in project1 by due date
-project1.sortTodosByPriority(); // Sort todos in project1 by priority
-const project3 = new Project("Projecfefet 3");
-projectObjects.push(project3);
-project3.addTodo(new Todo("Todo 4", "2023-10-04", 1));
-project3.addTodo(new Todo("Todo 5", "2023-10-05", 2));
-project3.addTodo(new Todo("Todo 6", "2023-10-06", 3));
-project3.addTodo(new Todo("Todo 7", "2023-10-07", 4));
 
 
 // Functions to manage active projects
@@ -97,14 +92,24 @@ function consoleLogProjects() {
         const project = projectObjects[i];
         console.log(`Project ${i + 1}: ${project.title}`);
         console.log("Todos:");
-        for (let j = 0; j < project.getTodos().length; j++) {
-            const todo = project.getTodos()[j];
+        for (let j = 0; j < project.todos.length; j++) {
+            const todo = project.todos[j];
             console.log(`- ${todo.title} (Due: ${todo.dueDate}, Priority: ${todo.priority})`);
         }
     }
 }
 
-// Log the projects and their todos
-// consoleLogProjects();
+
 export  {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects};
   
+
+
+const project1 = new Project("Default Project");
+const todo1 = new Todo("Buy groceries", "2023-10-01", 2);
+
+projectObjects.push(project1);
+const todo2 = new Todo("Clean the house", "2023-10-02", 1);
+project1.addTodo(todo2);
+project1.addTodo(todo1);
+project1.active = true;
+
