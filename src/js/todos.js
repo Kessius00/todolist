@@ -11,7 +11,7 @@ function createToDoElement(todoObject) {
     } else {
         todoElement.classList.add("todo-item");
     }
-
+    
     const left = document.createElement("div");
     left.classList.add("left-todo");
     todoElement.appendChild(left);

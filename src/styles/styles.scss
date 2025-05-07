@@ -179,6 +179,9 @@ img{
         border-bottom: $dark-purple 5px solid; 
     }
 
+
+
+
     .todo-item{
         background-color: $bright-purple;
         color:$dark-purple;
@@ -187,6 +190,8 @@ img{
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        
         
 
         &:hover{
@@ -229,6 +234,12 @@ img{
             background: $dark-blue;
         }
     }
+
+    .completed{
+        .checkbox{
+            background: $dark-purple !important;
+        }
+    }
 }
 
 button{
@@ -261,6 +272,75 @@ button.add-todo{
 
 }
 
+
+
+.todo-form-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.5s;
+    backdrop-filter: blur(5px);
+
+}
+
+#todo-form{
+    @include flex-column;
+    background-color: $purply-white;
+    color: $dark-purple;
+    padding: 50px;
+    border-radius: 5%;
+    gap: 1rem;
+    width: 50%;
+    height: auto;
+    color: $purply-white;
+    h2{
+        color: $dark-purple;
+        font-size: 2em;
+    }
+
+    .form-btns{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        button{
+            flex:1;
+        }
+    }
+    label
+    {
+        font-size: 1.2em;
+        color: $dark-purple;
+        margin-bottom: 10px;
+    }
+
+    input{
+        background: $bright-purple;
+        color: $dark-purple;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 1.2em;
+        width: 100%;
+        &:focus{
+            outline: none;
+            background: $dark-purple;
+            color: $purply-white;
+            border: #1230AE 2px solid;
+        }
+    }
+}
+
+
+.hidden{
+    display: none;
+}
 
 .footer{
     grid-area: 4 / 1 / 5 / 3;

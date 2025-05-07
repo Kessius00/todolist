@@ -31,6 +31,29 @@
                 <button class="add-todo btn">+ add</button>
             </div>
         </div>
+        <div class="todo-form-container hidden">
+            <form id="todo-form">
+                <h2>add todo</h2>
+                <label>
+                title
+                <input type="text" id="title" placeholder="Buy groceries..." required />
+                </label>
+
+                <label>
+                due date
+                <input type="date" id="dueDate" required />
+                </label>
+
+                <label>
+                priority
+                <input type="number" id="priority" min="1" max="3" value="1" />
+                </label>
+                <div class="form-btns">
+                    <button type="submit" class="submit-button">+ add</button>
+                    <button type="button" class="cancel-button">cancel</button>
+                </div>
+            </form>
+        </div>
         <div class="footer">
             <p>made by </p>
             <a href="google.com"> Kessius</a>
