@@ -77,7 +77,6 @@ function renderTodos() {
     // Function to render all todos in the active project
     console.log("Rendering todos...");
     const todos = document.querySelector(".todos");
-    const currentProjectTitle = document.querySelector(".current-project-title>h1");
     
     todos.innerHTML = ""; // Clear existing todos
     
@@ -85,10 +84,8 @@ function renderTodos() {
         // Check if the project is active
         console.log("Project title:", project);
         if (project.active) {
-            console.log("Active project found:", project.title);
-            currentProjectTitle.textContent = project.title; // Update the current project title
-
             // If the project is active, render its todos
+            
             project.todos.forEach((todo) => {
                 // if (todo.completed) {
                 //     todoElement.classList.add("completed");
