@@ -1,0 +1,61 @@
+
+
+// export function createDeletionForm(deletedElement) {
+//     // returns true if the form was submitted, false if it was not
+
+//     const deleteTitle = document.querySelector(".delete-project-title");
+//     const deleteProjectContainer = document.querySelector(".delete-project-container");
+//     const form = document.querySelector("#delete-project-form");
+
+//     const deletedProjectText = `Are you sure you want to delete the project "${deletedElement.textContent}"?`;
+
+//     deleteTitle.textContent = deletedProjectText;
+//     deleteProjectContainer.classList.remove("hidden");
+    
+//     const cancelButton = document.querySelector('button.cancel-delete-project-button');
+
+
+//     cancelButton.addEventListener('click', () => {
+//         removeDeletionForm();
+
+//     }, { once: true });
+
+//     // if escape key is pressed, remove the form
+//     document.addEventListener('keydown', (event) => {
+//         if (event.key === 'Escape') {
+//             removeDeletionForm();
+//         };
+//     },  { once: true });
+
+//     // if enter key is pressed, remove the form
+//     document.addEventListener('keydown', (event) => {
+//         if (event.key === 'Enter') {
+//             removeDeletionForm();
+//             return true;
+//         }
+//     }, { once: true });
+
+//     // if the form is submitted, remove the form
+
+//     form.addEventListener('submit', (event) => {
+//         event.preventDefault();
+//         removeDeletionForm();
+//         return true;
+        
+//     }, { once: true });
+//     return false; // Return false to indicate that the form was not submitted
+
+// }
+
+
+
+// function removeDeletionForm(){
+
+//     const form = document.querySelector("#delete-project-form");
+//     const deleteProjectContainer = document.querySelector(".delete-project-container");
+//     const deleteTitle = document.querySelector(".delete-project-title");
+//     deleteTitle.textContent = "";
+//     deleteProjectContainer.classList.add("hidden");
+//     form.reset(); // Reset the form fields
+
+// }

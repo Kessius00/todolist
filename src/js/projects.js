@@ -1,11 +1,11 @@
 
 import trashIcon from "../assets/trash.svg";
 import {projectObjects, Project ,setActiveProject} from "./classes.js";
-// import renderProjects from "./events.js";
 import {renderTodos} from "./todos.js";
+import { createDeletionForm } from "./project-forms.js";
 
 
-export function renderAddProjectBtn(){
+function renderAddProjectBtn(){
     const addProjectBtn = document.querySelector(".add-project-button");
 
 
@@ -77,50 +77,43 @@ function createProjectElement(projectObject) {
         renderTodos(); // Re-render the todos for the active project
     });
 
-
-    // Add event listener for the trash icon to delete the project
     trash.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent the click event from bubbling up to the deletedElement
-        if (confirm("Are you sure you want to delete this project?")) {
-            const deletedElement = e.target.closest(".project-item");
-            if (deletedElement) {
-                // empty projectObjects array
-                const index = projectObjects.findIndex(projectObject => projectObject.title === deletedElement.textContent);
-                if (index !== -1) {
-                    projectObjects.splice(index, 1);
-                } else {
-                    throw new Error(`project with title ${deletedElement.textContent} not found. Cant delete from projectArray`);
-                }
-                deletedElement.remove();
-                
-                if (projectObjects.length > 0) {
-                    // Next project in line
-                    let nextProject;
-                    if (index === 0) {
-                        nextProject = projectObjects[index];
-                    } else {
-                        nextProject = projectObjects[index - 1];
-                    }
-
-                    setActiveProject(nextProject, projectObjects);
-                    const newActiveElement = searchProjectElementByTitle(nextProject.title);
-
-                    updateActiveProjectClass(newActiveElement);
-                    renderProjects();
-                    renderTodos(); // Re-render the todos for the active project
-
-    
-                } else{
-                    // No more projects
-                    renderProjects();
-                    renderTodos();
-                    document.querySelector(".current-project-title>h1").textContent = "No projects remaining... (•́︵•̀)";
-                }
+        e.stopPropagation();
+        // const deletedElement = e.target.closest(".project-item");
+        // console.log("Deleted element:", projectElement);
+        
+        createDeletionForm(projectElement, () => {
+            // Everything in here only runs after user confirms deletion
+            const index = projectObjects.findIndex(projectObject => projectObject.title === projectElement.textContent);
+            if (index !== -1) {
+                projectObjects.splice(index, 1);
+            } else {
+                throw new Error(`Project with title ${projectElement.textContent} not found.`);
             }
-            
-        }
-    });
+            projectElement.remove();
 
+            if (projectObjects.length > 0) {
+                // set next project as the project above the deleted one
+
+                // choosing the next project
+                let nextProject = (index === 0) ? projectObjects[0] : projectObjects[index - 1];
+
+                setActiveProject(nextProject, projectObjects);
+                // update the active project class
+                const newActiveElement = searchProjectElementByTitle(nextProject.title);
+                updateActiveProjectClass(newActiveElement);
+
+                // Re-render the projects and todos
+                renderProjects();
+                renderTodos();
+            } else {
+                renderProjects();
+                renderTodos();
+                document.querySelector(".current-project-title>h1").textContent = "No projects remaining... (•́︵•̀)";
+            }
+        });
+    });
+    
     return projectElement;
 }
 
@@ -155,10 +148,13 @@ function renderProjects() {
 
     });
 
+    console.log("Rendering projects...");
+    console.log(projectObjects);
+
 }
 
 
-export {renderProjects};
+export {renderProjects,renderAddProjectBtn};
 
 
 

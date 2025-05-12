@@ -49,22 +49,16 @@ function createToDoElement(todoObject) {
         todoElement.classList.toggle("completed");
         todoObject.completed = !todoObject.completed;
 
-        if (todoObject.completed) {
-            todoElement.style.textDecoration = "line-through";
-        } else {
-            todoElement.style.textDecoration = "none";
-        }
-        
-        console.log(todoObject.project);
+        // console.log(todoObject.project);
     });
 
     trashBin.addEventListener("click", (e) => {
         e.stopPropagation(); // Prevent the click event from bubbling up to the todoElement
-        console.log("THE PROJECT --> ",todoObject.project)
+        // console.log("THE PROJECT --> ",todoObject.project)
         const todoProject = todoObject.project;
         todoProject.removeTodo(todoObject.id); // Remove the todo from the project
         todoElement.remove();
-        console.log(`Todo with ID ${todoObject.id} removed`);
+        // console.log(`Todo with ID ${todoObject.id} removed`);
 
     });
     
@@ -82,7 +76,6 @@ function renderTodos() {
     
     projectObjects.forEach((project) => {
         // Check if the project is active
-        console.log("Project title:", project);
         if (project.active) {
             // If the project is active, render its todos
             
@@ -97,7 +90,7 @@ function renderTodos() {
     });
 }
 
-renderTodos(); // Initial render of todos
+// renderTodos(); // Initial render of todos
 
 
 export {createToDoElement, renderTodos};

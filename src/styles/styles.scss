@@ -236,6 +236,7 @@ img{
     }
 
     .completed{
+        text-decoration: line-through;
         .checkbox{
             background: $dark-purple !important;
         }
@@ -272,9 +273,7 @@ button.add-todo{
 
 }
 
-
-
-.todo-form-container{
+@mixin form-container{
     position: absolute;
     top: 0;
     left: 0;
@@ -283,12 +282,22 @@ button.add-todo{
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background-color 0.5s;
     backdrop-filter: blur(5px);
+}
+
+
+.delete-project-container{
+    @include form-container;
+    backdrop-filter: blur(10px);
+}
+
+
+.todo-form-container{
+    @include form-container;
 
 }
 
-#todo-form{
+#todo-form, #delete-project-form {
     @include flex-column;
     background-color: $purply-white;
     color: $dark-purple;
@@ -336,7 +345,6 @@ button.add-todo{
         }
     }
 }
-
 
 .hidden{
     display: none;

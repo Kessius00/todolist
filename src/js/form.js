@@ -1,4 +1,4 @@
-import { Todo, Project, projectObjects, checkActiveProject} from './classes.js'; // Import the Todo class
+import { Todo, projectObjects, checkActiveProject} from './classes.js'; // Import the Todo class
 import {renderTodos} from './todos.js'; // Import the renderTodos function
 
 
@@ -6,7 +6,7 @@ const form = document.getElementById('todo-form');
 
 
 const addTodoButton = document.querySelector('button.add-todo');
-console.log("Add Todo Button: ", addTodoButton);
+// console.log("Add Todo Button: ", addTodoButton);
 function activateAddTodoButton() {
 
     const formContainer = document.querySelector('.todo-form-container');
@@ -42,8 +42,8 @@ function activateAddTodoButton() {
         if (activeProject) {
             activeProject.addTodo(newTodo); // Add the new todo to the active project
         }
-        console.log("New Todo: ", newTodo);
-        console.log("Active Project: ", activeProject);
+        // console.log("New Todo: ", newTodo);
+        // console.log("Active Project: ", activeProject);
 
         // Render the todos in the active project
         renderTodos();
