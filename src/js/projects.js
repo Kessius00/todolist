@@ -2,41 +2,41 @@
 import trashIcon from "../assets/trash.svg";
 import {projectObjects, Project ,setActiveProject} from "./classes.js";
 import {renderTodos} from "./todos.js";
-import { createDeletionForm } from "./project-forms.js";
-
+import { createDeletionForm, createProjectForm } from "./project-forms.js";
 
 function renderAddProjectBtn(){
     const addProjectBtn = document.querySelector(".add-project-button");
 
-
     addProjectBtn.addEventListener("click", () => {
-        const projectName = prompt("Enter project name:");
+        createProjectForm(() => {
+            const titleInput = document.querySelector("#project-title-input");
+            const projectName = titleInput.value;
 
-        // Check if the project name already exists
-        const projectExists = projectObjects.some(project => project.title === projectName);
-        if (projectExists) {
-            alert("Project name already exists. Please choose a different name.");
-            return;
-        }    
+            // Check if the project name already exists
+            const projectExists = projectObjects.some(project => project.title === projectName);
+            if (projectExists) {
+                alert("Project name already exists. Please choose a different name.");
+                return;
+            }    
 
-        // Check if the user entered a project name
-        if (projectName) {
-            const newProjectObject = new Project(projectName);
+            // Check if the user entered a project name
+            if (projectName) {
+                const newProjectObject = new Project(projectName);
 
-            // Add the new project to the projectObjects array
-            projectObjects.push(newProjectObject);
+                // Add the new project to the projectObjects array
+                projectObjects.push(newProjectObject);
 
-            // Set the new project as active
-            setActiveProject(newProjectObject, projectObjects); 
+                // Set the new project as active
+                setActiveProject(newProjectObject, projectObjects); 
+            }
 
-        }
-
-        // Render the new page
-        renderProjects(); // Re-render the projects
-        renderTodos(); // Re-render the todos
-
+            // Render the new page
+            renderProjects(); // Re-render the projects
+            renderTodos(); // Re-render the todos
+        });
     });
 }
+
 
 
 function updateActiveProjectClass(projectElement){
@@ -81,7 +81,7 @@ function createProjectElement(projectObject) {
         e.stopPropagation();
         // const deletedElement = e.target.closest(".project-item");
         // console.log("Deleted element:", projectElement);
-        
+
         createDeletionForm(projectElement, () => {
             // Everything in here only runs after user confirms deletion
             const index = projectObjects.findIndex(projectObject => projectObject.title === projectElement.textContent);
@@ -128,6 +128,8 @@ function searchProjectElementByTitle(title) {
 function renderProjects() {
     const projects = document.querySelector(".projects");
     projects.innerHTML = ""; // Clear existing projects
+    
+    renderAddProjectBtn();
 
     projectObjects.forEach((project, index) => {
         const projectElement = createProjectElement(project); // Create a project element
@@ -148,8 +150,6 @@ function renderProjects() {
 
     });
 
-    console.log("Rendering projects...");
-    console.log(projectObjects);
 
 }
 

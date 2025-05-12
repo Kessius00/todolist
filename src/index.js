@@ -9,7 +9,6 @@ import {renderProjects, renderAddProjectBtn} from "./js/projects.js";
 import {activateAddTodoButton} from "./js/form.js";
 
 
-renderAddProjectBtn();
 renderProjects();
 // renderTodos();
 

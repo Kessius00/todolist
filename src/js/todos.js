@@ -1,3 +1,4 @@
+
 import trashIcon from '../assets/trash.svg';
 import {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects} from "./classes.js";
 
@@ -14,27 +15,26 @@ function createToDoElement(todoObject) {
     
     const left = document.createElement("div");
     left.classList.add("left-todo");
-    todoElement.appendChild(left);
 
     const checkbox = document.createElement("div");
     checkbox.classList.add("checkbox");
     checkbox.style.border = "4px solid #4B2C91";
     checkbox.style.backgroundColor = "transparent";
-    left.appendChild(checkbox);
 
     const todoTitle = document.createElement("p");
     todoTitle.textContent = todoObject.title;
     todoTitle.classList.add("todo-title");
-    left.appendChild(todoTitle);
+
+    left.append(checkbox, todoTitle);
 
     const right = document.createElement("div");
     right.classList.add("right-todo");
-    todoElement.appendChild(right);
+    
+    todoElement.append(left, right);
 
     const todoDueDate = document.createElement("p");
     todoDueDate.textContent = todoObject.dueDate;
     todoDueDate.classList.add("todo-due-date");
-    right.appendChild(todoDueDate);
 
     todoElement.setAttribute("data-priority", todoObject.priority);
     
@@ -42,12 +42,14 @@ function createToDoElement(todoObject) {
     trashBin.src = trashIcon;
     trashBin.alt = "Trash Bin";
     trashBin.classList.add("trash-bin");
-    right.appendChild(trashBin);
+
+    right.append(trashBin, todoDueDate);
 
     // Add event listeners for the todo Element
     todoElement.addEventListener("click", () => {
         todoElement.classList.toggle("completed");
         todoObject.completed = !todoObject.completed;
+        renderTodos(); // Re-render the todos
 
         // console.log(todoObject.project);
     });
@@ -58,6 +60,7 @@ function createToDoElement(todoObject) {
         const todoProject = todoObject.project;
         todoProject.removeTodo(todoObject.id); // Remove the todo from the project
         todoElement.remove();
+        renderTodos(); // Re-render the todos
         // console.log(`Todo with ID ${todoObject.id} removed`);
 
     });
@@ -79,15 +82,22 @@ function renderTodos() {
         if (project.active) {
             // If the project is active, render its todos
             
+            let todoscompleted =  project.todos.filter(todo => todo.completed);
+            
+            console.log("Completed todos: ", todoscompleted);
+            let todoswithoutcompleted =  project.todos.filter(todo => !todo.completed);
+            todoswithoutcompleted.sort((a, b) => a.priority - b.priority);
+            project.todos = todoswithoutcompleted.concat(todoscompleted);
+
             project.todos.forEach((todo) => {
-                // if (todo.completed) {
-                //     todoElement.classList.add("completed");
-                // }
                 const todoElement = createToDoElement(todo);
                 todos.appendChild(todoElement);
             });
+            console.log(project.todos);
+            
         }
     });
+
 }
 
 // renderTodos(); // Initial render of todos
