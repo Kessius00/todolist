@@ -3,7 +3,7 @@ import trashIcon from "../assets/trash.svg";
 import {projectObjects, Project ,setActiveProject, getProjectObjects} from "./classes.js";
 import {renderTodos} from "./todos.js";
 import { createDeletionForm, createProjectForm } from "./project-forms.js";
-import { placeInStorage} from "./storage.js";
+// import { placeInStorage} from "./storage.js";
 
 
 function renderAddProjectBtn(){
@@ -124,7 +124,7 @@ function createProjectElement(projectObject) {
 
 export function addProject(newProject) {
     projectObjects.push(newProject);
-    placeInStorage(projectObjects); 
+    // placeInStorage(projectObjects); 
     renderTodos();
     console.log("LocalStorage after adding project:", localStorage.getItem("projects"));
 }
@@ -137,7 +137,7 @@ export function removeProject(projectElement){
     } else {
         throw new Error(`Project with title ${projectElement.textContent} not found.`);
     }
-    placeInStorage(projectObjects); 
+    // placeInStorage(projectObjects); 
     return index;
 
 }

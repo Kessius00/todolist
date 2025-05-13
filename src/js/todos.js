@@ -2,7 +2,7 @@
 
 import trashIcon from '../assets/trash.svg';
 import { createDateElement } from './date.js';
-import { placeInStorage, createProjectObjectsFromStorage } from './storage.js';
+// import { placeInStorage, createProjectObjectsFromStorage } from './storage.js';
 import {
     Todo,
     projectObjects,
@@ -12,7 +12,7 @@ import {
 } from './classes.js';
 import { renderProjects } from './projects.js';
 
-function renderAddTodoBtn() {
+export function renderAddTodoBtn() {
     const addTodoButton = document.querySelector('button.add-todo');
     const form = document.getElementById('todo-form');
     const formContainer = document.querySelector('.todo-form-container');
@@ -39,7 +39,7 @@ function renderAddTodoBtn() {
             console.log('Project Objects:', getProjectObjects());
 
             console.log(getProjectObjects())
-            placeInStorage(getProjectObjects());
+            // placeInStorage(getProjectObjects());
             // console.log('LocalStorage after adding todo:', createProjectObjectsFromStorage());
 
             renderTodos();
@@ -48,6 +48,7 @@ function renderAddTodoBtn() {
     };
 
     const submitForm = (event) => {
+        console.log("submit triggered from", event.type);
         event.preventDefault();
         handleSubmit();
         removeForm();
@@ -56,9 +57,7 @@ function renderAddTodoBtn() {
     const handleKeyDown = (event) => {
         if (event.key === 'Escape') {
             removeForm();
-        } else if (event.key === 'Enter') {
-            submitForm(event);
-        }
+        } 
     };
 
     // Event listeners
@@ -123,8 +122,6 @@ function createToDoElement(todoObject) {
 function renderTodos() {
     const todosContainer = document.querySelector('.todos');
     todosContainer.innerHTML = '';
-
-    renderAddTodoBtn();
 
     const activeProject = checkActiveProject(getProjectObjects());
     if (!activeProject) return;
