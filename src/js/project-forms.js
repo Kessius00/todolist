@@ -1,4 +1,5 @@
 
+// Project Deletion Form
 export function createDeletionForm(deletedElement, onConfirm) {
     const deleteTitle = document.querySelector(".delete-project-title");
     const deleteProjectContainer = document.querySelector(".delete-project-container");
@@ -21,7 +22,7 @@ export function createDeletionForm(deletedElement, onConfirm) {
             confirmAndClose();
         }
     };
-
+    
     const handleSubmit = (event) => {
         event.preventDefault();
         confirmAndClose();
@@ -42,7 +43,6 @@ export function createDeletionForm(deletedElement, onConfirm) {
     }
 }
 
-
 function removeDeletionForm() {
     const form = document.querySelector("#delete-project-form");
     const deleteProjectContainer = document.querySelector(".delete-project-container");
@@ -52,9 +52,6 @@ function removeDeletionForm() {
     deleteProjectContainer.classList.add("hidden");
     form.reset();
 }
-
-
-
 // Project Form
 
 export function createProjectForm(titleScrape) {

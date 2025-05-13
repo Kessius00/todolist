@@ -1,10 +1,25 @@
-import { formatDistance, subDays } from "date-fns";
+import { formatDistance } from "date-fns";
 
-formatDistance(subDays(new Date(), 3), new Date(), { addSuffix: true })
-//=> "3 days ago"
+export function createDateElement(inputData) {
+    const dateElement = document.createElement("div");
+    dateElement.classList.add("date-element");
 
+    // Defensive fallback
+    if (!inputData) {
+        dateElement.textContent = "No due date";
+        return dateElement;
+    }
 
+    const inputDate = new Date(inputData);
+    const todayDate = new Date();
 
+    if (isNaN(inputDate.getTime())) {
+        dateElement.textContent = "Invalid date";
+    } else {
+        const formattedDate = formatDistance(inputDate, todayDate, { addSuffix: true });
+        dateElement.textContent = formattedDate;
+    }
 
-// formatRelative(subDays(new Date(), 3), new Date())
-// //=> "last Friday at 7:26 p.m."
+    return dateElement;
+}
+

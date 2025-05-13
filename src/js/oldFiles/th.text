@@ -1,61 +1,80 @@
 
+import {Todo, Project} from "./classes.js";
 
-// export function createDeletionForm(deletedElement) {
-//     // returns true if the form was submitted, false if it was not
+export function getProjectObjectsFromStorage() {
+    const storedListJSON = localStorage.getItem("projects");
 
-//     const deleteTitle = document.querySelector(".delete-project-title");
-//     const deleteProjectContainer = document.querySelector(".delete-project-container");
-//     const form = document.querySelector("#delete-project-form");
+    if (storedListJSON !== null) {
+        const storedList = JSON.parse(storedListJSON);
+        return unpackStoredProjects(storedList);
+    }
 
-//     const deletedProjectText = `Are you sure you want to delete the project "${deletedElement.textContent}"?`;
+    console.log("No list found named 'projects'");
+    return [];
+}
 
-//     deleteTitle.textContent = deletedProjectText;
-//     deleteProjectContainer.classList.remove("hidden");
+
+function placeInStorage(myList) {
+    const cleanedList = myList.map(project => {
+        return {
+            title: project.title,
+            active: project.active,
+            todos: project.todos.map(todo => {
+                const { title, description, dueDate, priority, completed } = todo;
+                return { title, description, dueDate, priority, completed };
+            })
+        };
+    });
+
+    const myListJSON = JSON.stringify(cleanedList);
+    localStorage.setItem("projects", myListJSON);
+}
+
+
+export function retrieveStorageList(){
+    const storedListJSON = localStorage.getItem("projects");
+
+    if (storedListJSON!==null){
+        const storedList = JSON.parse(storedListJSON);
+        return storedList
+    }
+    console.log(`No list found of name projects`);
+    return
     
-//     const cancelButton = document.querySelector('button.cancel-delete-project-button');
-
-
-//     cancelButton.addEventListener('click', () => {
-//         removeDeletionForm();
-
-//     }, { once: true });
-
-//     // if escape key is pressed, remove the form
-//     document.addEventListener('keydown', (event) => {
-//         if (event.key === 'Escape') {
-//             removeDeletionForm();
-//         };
-//     },  { once: true });
-
-//     // if enter key is pressed, remove the form
-//     document.addEventListener('keydown', (event) => {
-//         if (event.key === 'Enter') {
-//             removeDeletionForm();
-//             return true;
-//         }
-//     }, { once: true });
-
-//     // if the form is submitted, remove the form
-
-//     form.addEventListener('submit', (event) => {
-//         event.preventDefault();
-//         removeDeletionForm();
-//         return true;
-        
-//     }, { once: true });
-//     return false; // Return false to indicate that the form was not submitted
-
-// }
+}
 
 
 
-// function removeDeletionForm(){
+export function unpackStoredProjects(storedProjectList) {
+    const projectObjects = [];
 
-//     const form = document.querySelector("#delete-project-form");
-//     const deleteProjectContainer = document.querySelector(".delete-project-container");
-//     const deleteTitle = document.querySelector(".delete-project-title");
-//     deleteTitle.textContent = "";
-//     deleteProjectContainer.classList.add("hidden");
-//     form.reset(); // Reset the form fields
+    storedProjectList.forEach(projectData => {
+        const project = new Project(projectData.title);
+        project.active = projectData.active;
 
-// }
+        projectData.todos.forEach(todoData => {
+            const todo = new Todo(todoData.title, new Date(todoData.dueDate), todoData.priority);
+            todo.completed = todoData.completed;
+
+            // This will also assign the project to the todo
+            project.addTodo(todo);
+        });
+
+        projectObjects.push(project);
+    });
+
+    return projectObjects;
+}
+
+export function updateStorage(projects){
+    //only changes the projects list in storage
+
+    //clean storage to fill it in with the projects array, containing the project object instances
+    localStorage.clear();
+
+    //place projects list in storage
+    placeInStorage(projects);
+
+    //monitoring
+    console.log("new storage projects list: ", retrieveStorageList());
+}

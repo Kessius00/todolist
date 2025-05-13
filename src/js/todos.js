@@ -1,107 +1,146 @@
+// todoUI.js
 
 import trashIcon from '../assets/trash.svg';
-import {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects, projectObjects} from "./classes.js";
+import { createDateElement } from './date.js';
+import { placeInStorage, createProjectObjectsFromStorage } from './storage.js';
+import {
+    Todo,
+    projectObjects,
+    checkActiveProject,
+    getProjectObjects,
+    setProjectObjects
+} from './classes.js';
+import { renderProjects } from './projects.js';
 
+function renderAddTodoBtn() {
+    const addTodoButton = document.querySelector('button.add-todo');
+    const form = document.getElementById('todo-form');
+    const formContainer = document.querySelector('.todo-form-container');
+    const cancelButton = document.querySelector('button.cancel-button');
+
+    const removeForm = () => {
+        formContainer.classList.add('hidden');
+        form.reset();
+    };
+
+    const handleSubmit = () => {
+        const title = document.getElementById('title').value;
+        const dueDate = document.getElementById('dueDate').value;
+        const priority = parseInt(document.getElementById('priority').value);
+
+        const newTodo = new Todo(title, dueDate, priority);
+        const activeProject = checkActiveProject(getProjectObjects());
+
+        if (activeProject) {
+            activeProject.addTodo(newTodo);
+
+            console.log('New Todo:', newTodo);
+            console.log('Active Project:', activeProject);
+            console.log('Project Objects:', getProjectObjects());
+
+            console.log(getProjectObjects())
+            placeInStorage(getProjectObjects());
+            // console.log('LocalStorage after adding todo:', createProjectObjectsFromStorage());
+
+            renderTodos();
+            renderProjects();
+        }
+    };
+
+    const submitForm = (event) => {
+        event.preventDefault();
+        handleSubmit();
+        removeForm();
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Escape') {
+            removeForm();
+        } else if (event.key === 'Enter') {
+            submitForm(event);
+        }
+    };
+
+    // Event listeners
+    addTodoButton.addEventListener('click', () => formContainer.classList.remove('hidden'));
+    cancelButton.addEventListener('click', removeForm);
+    form.addEventListener('submit', submitForm);
+    document.addEventListener('keydown', handleKeyDown);
+    formContainer.addEventListener('click', (event) => {
+        if (event.target === formContainer) removeForm();
+    });
+}
 
 function createToDoElement(todoObject) {
-    // create a DOM element for the todo item
-    const todoElement = document.createElement("div");
-    
-    if (todoObject.completed) {
-        todoElement.classList.add("todo-item", "completed");
-    } else {
-        todoElement.classList.add("todo-item");
-    }
-    
-    const left = document.createElement("div");
-    left.classList.add("left-todo");
+    const todoElement = document.createElement('div');
+    todoElement.classList.add('todo-item');
+    if (todoObject.completed) todoElement.classList.add('completed');
 
-    const checkbox = document.createElement("div");
-    checkbox.classList.add("checkbox");
-    checkbox.style.border = "4px solid #4B2C91";
-    checkbox.style.backgroundColor = "transparent";
+    const left = document.createElement('div');
+    left.classList.add('left-todo');
 
-    const todoTitle = document.createElement("p");
+    const checkbox = document.createElement('div');
+    checkbox.classList.add('checkbox');
+    checkbox.style.border = '4px solid #4B2C91';
+    checkbox.style.backgroundColor = 'transparent';
+
+    const todoTitle = document.createElement('p');
     todoTitle.textContent = todoObject.title;
-    todoTitle.classList.add("todo-title");
+    todoTitle.classList.add('todo-title');
 
     left.append(checkbox, todoTitle);
 
-    const right = document.createElement("div");
-    right.classList.add("right-todo");
-    
-    todoElement.append(left, right);
+    const right = document.createElement('div');
+    right.classList.add('right-todo');
 
-    const todoDueDate = document.createElement("p");
-    todoDueDate.textContent = todoObject.dueDate;
-    todoDueDate.classList.add("todo-due-date");
-
-    todoElement.setAttribute("data-priority", todoObject.priority);
-    
-    const trashBin = document.createElement("img");
+    const trashBin = document.createElement('img');
     trashBin.src = trashIcon;
-    trashBin.alt = "Trash Bin";
-    trashBin.classList.add("trash-bin");
+    trashBin.alt = 'Trash Bin';
+    trashBin.classList.add('trash-bin');
+
+    const todoDueDate = createDateElement(todoObject.dueDate);
 
     right.append(trashBin, todoDueDate);
+    todoElement.setAttribute('data-priority', todoObject.priority);
+    todoElement.append(left, right);
 
-    // Add event listeners for the todo Element
-    todoElement.addEventListener("click", () => {
-        todoElement.classList.toggle("completed");
+    // Mark completed toggle
+    todoElement.addEventListener('click', () => {
         todoObject.completed = !todoObject.completed;
-        renderTodos(); // Re-render the todos
-
-        // console.log(todoObject.project);
+        renderTodos();
     });
 
-    trashBin.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent the click event from bubbling up to the todoElement
-        // console.log("THE PROJECT --> ",todoObject.project)
-        const todoProject = todoObject.project;
-        todoProject.removeTodo(todoObject.id); // Remove the todo from the project
-        todoElement.remove();
-        renderTodos(); // Re-render the todos
-        // console.log(`Todo with ID ${todoObject.id} removed`);
-
+    // Delete button handler
+    trashBin.addEventListener('click', (e) => {
+        e.stopPropagation();
+        todoObject.project.removeTodo(todoObject.id);
+        renderTodos();
     });
-    
 
     return todoElement;
 }
 
-
 function renderTodos() {
-    // Function to render all todos in the active project
-    console.log("Rendering todos...");
-    const todos = document.querySelector(".todos");
-    
-    todos.innerHTML = ""; // Clear existing todos
-    
-    projectObjects.forEach((project) => {
-        // Check if the project is active
-        if (project.active) {
-            // If the project is active, render its todos
-            
-            let todoscompleted =  project.todos.filter(todo => todo.completed);
-            
-            console.log("Completed todos: ", todoscompleted);
-            let todoswithoutcompleted =  project.todos.filter(todo => !todo.completed);
-            todoswithoutcompleted.sort((a, b) => a.priority - b.priority);
-            project.todos = todoswithoutcompleted.concat(todoscompleted);
+    const todosContainer = document.querySelector('.todos');
+    todosContainer.innerHTML = '';
 
-            project.todos.forEach((todo) => {
-                const todoElement = createToDoElement(todo);
-                todos.appendChild(todoElement);
-            });
-            console.log(project.todos);
-            
-        }
+    renderAddTodoBtn();
+
+    const activeProject = checkActiveProject(getProjectObjects());
+    if (!activeProject) return;
+
+    const todosSorted = [
+        ...activeProject.todos.filter(todo => !todo.completed).sort((a, b) => a.priority - b.priority),
+        ...activeProject.todos.filter(todo => todo.completed)
+    ];
+
+    activeProject.todos = todosSorted;
+
+    todosSorted.forEach(todo => {
+        const todoElement = createToDoElement(todo);
+        todosContainer.appendChild(todoElement);
     });
-
 }
 
-// renderTodos(); // Initial render of todos
 
-
-export {createToDoElement, renderTodos};
-
+export { createToDoElement, renderTodos };

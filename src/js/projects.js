@@ -1,8 +1,10 @@
 
 import trashIcon from "../assets/trash.svg";
-import {projectObjects, Project ,setActiveProject} from "./classes.js";
+import {projectObjects, Project ,setActiveProject, getProjectObjects} from "./classes.js";
 import {renderTodos} from "./todos.js";
 import { createDeletionForm, createProjectForm } from "./project-forms.js";
+import { placeInStorage} from "./storage.js";
+
 
 function renderAddProjectBtn(){
     const addProjectBtn = document.querySelector(".add-project-button");
@@ -23,33 +25,33 @@ function renderAddProjectBtn(){
             if (projectName) {
                 const newProjectObject = new Project(projectName);
 
-                // Add the new project to the projectObjects array
-                projectObjects.push(newProjectObject);
-
                 // Set the new project as active
                 setActiveProject(newProjectObject, projectObjects); 
-            }
 
-            // Render the new page
-            renderProjects(); // Re-render the projects
-            renderTodos(); // Re-render the todos
+                // Add the new project to the projectObjects array
+                addProject(newProjectObject); // Add the new project to the DOM
+
+                // Re-render the projects
+                renderProjects(); // Re-render the projects
+                renderTodos(); // Re-render the todos for the active project
+
+            }
         });
     });
 }
 
-
-
 function updateActiveProjectClass(projectElement){
-    // Remove active class from other projects
-    const allProjectElements = document.querySelectorAll(".project-item");
-    allProjectElements.forEach((project) => {
-        project.classList.remove("active-project");
-    });
-    
-    // Add active class to projectElement
-    projectElement.classList.add("active-project");
-    
-}
+        // Remove active class from other projects
+        const allProjectElements = document.querySelectorAll(".project-item");
+        allProjectElements.forEach((project) => {
+            project.classList.remove("active-project");
+        });
+        
+        // Add active class to projectElement
+        projectElement.classList.add("active-project");
+        
+    }
+
 
 function createProjectElement(projectObject) {
     // create a DOM element for the project item
@@ -63,6 +65,14 @@ function createProjectElement(projectObject) {
     trash.alt = "Trash Bin";
     trash.classList.add("trash-bin");
     projectElement.appendChild(trash);
+
+    function searchProjectElementByTitle(title) {
+        // Search for a project element by its title
+        const projectElement = Array.from(document.querySelectorAll(".project-item")).find(
+            (element) => element.textContent === title
+        );
+        return projectElement;
+    }
 
     // Check if the project is active
     if (projectObject.active) {
@@ -84,12 +94,7 @@ function createProjectElement(projectObject) {
 
         createDeletionForm(projectElement, () => {
             // Everything in here only runs after user confirms deletion
-            const index = projectObjects.findIndex(projectObject => projectObject.title === projectElement.textContent);
-            if (index !== -1) {
-                projectObjects.splice(index, 1);
-            } else {
-                throw new Error(`Project with title ${projectElement.textContent} not found.`);
-            }
+            const index = removeProject(projectElement);
             projectElement.remove();
 
             if (projectObjects.length > 0) {
@@ -117,21 +122,34 @@ function createProjectElement(projectObject) {
     return projectElement;
 }
 
-function searchProjectElementByTitle(title) {
-    // Search for a project element by its title
-    const projectElement = Array.from(document.querySelectorAll(".project-item")).find(
-        (element) => element.textContent === title
-    );
-    return projectElement;
+export function addProject(newProject) {
+    projectObjects.push(newProject);
+    placeInStorage(projectObjects); 
+    renderTodos();
+    console.log("LocalStorage after adding project:", localStorage.getItem("projects"));
 }
+
+export function removeProject(projectElement){
+    // Remove the project from the projectObjects array
+    const index = projectObjects.findIndex(project => project.title === projectElement.textContent);
+    if (index !== -1) {
+        projectObjects.splice(index, 1);
+    } else {
+        throw new Error(`Project with title ${projectElement.textContent} not found.`);
+    }
+    placeInStorage(projectObjects); 
+    return index;
+
+}
+
 
 function renderProjects() {
     const projects = document.querySelector(".projects");
     projects.innerHTML = ""; // Clear existing projects
-    
     renderAddProjectBtn();
 
-    projectObjects.forEach((project, index) => {
+
+    getProjectObjects().forEach((project) => {
         const projectElement = createProjectElement(project); // Create a project element
 
         if (project.active) {    // Update the current project title
@@ -140,16 +158,18 @@ function renderProjects() {
         
             // Add active-project class to the project element
             updateActiveProjectClass(projectElement);
+            setActiveProject(project, projectObjects);
+
         
             // Re-render the todos for the active project
             renderTodos(); //has its own active project checker 
+
         }
 
         // Add element to the DOM
         projects.appendChild(projectElement);
 
     });
-
 
 }
 

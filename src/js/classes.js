@@ -1,12 +1,23 @@
 // This module defines the Todo and Project classes, and functions to manage projects and todos.
 
-const projectObjects = [];
+let projectObjects = [];
+
+export function getProjectObjects() {
+    return projectObjects;
+}
+
+export function setProjectObjects(newList) {
+    projectObjects = newList;
+}
 
 
 // Classes
 class Todo {
     // The constructor takes the title, description, due date, and priority as parameters
     constructor(title, dueDate, priority = 1) {
+        if (title === "") {
+            throw new Error("Title cannot be empty");
+        }
         this.id = crypto.randomUUID(); // Generate a unique ID using crypto
         this.title = title;
         this.dueDate = dueDate;
@@ -14,7 +25,6 @@ class Todo {
         this.project = null; // Initialize project to null
         this.completed = false;
     }
-
 }
 
 class Project {
@@ -29,6 +39,7 @@ class Project {
         if (todo instanceof Todo) {
             this.todos.push(todo); // Set the project for the todo
             todo.project = this;
+            // placeInStorage(projectObjects); // Save the updated project list to localStorage
         } else {
             throw new Error("addTodo expects an instance of Todo");
         }
@@ -62,9 +73,7 @@ class Project {
             }
         }
     }
-
 }
-
 
 
 // Functions to manage active projects
@@ -105,10 +114,12 @@ export  {Todo, Project, setActiveProject, checkActiveProject, consoleLogProjects
 
 
 const project1 = new Project("Default Project");
-const todo1 = new Todo("Buy groceries", "2023-10-01", 2);
+const project2 = new Project("Work");
+const todo1 = new Todo("Buy groceries", "2025-12-01", 2);
 
 projectObjects.push(project1);
-const todo2 = new Todo("Clean the house", "2023-10-02", 1);
+projectObjects.push(project2);
+const todo2 = new Todo("Clean the house", "2025-12-02", 1);
 project1.addTodo(todo2);
 project1.addTodo(todo1);
 project1.active = true;
