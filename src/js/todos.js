@@ -2,7 +2,8 @@
 
 import trashIcon from '../assets/trash.svg';
 import { createDateElement } from './date.js';
-// import { placeInStorage, createProjectObjectsFromStorage } from './storage.js';
+import { placeInStorage, createProjectObjectsFromStorage } from './storage.js';
+
 import {
     Todo,
     projectObjects,
@@ -39,8 +40,10 @@ export function renderAddTodoBtn() {
             console.log('Project Objects:', getProjectObjects());
 
             console.log(getProjectObjects())
-            // placeInStorage(getProjectObjects());
+            placeInStorage(getProjectObjects());
             // console.log('LocalStorage after adding todo:', createProjectObjectsFromStorage());
+
+
 
             renderTodos();
             renderProjects();
@@ -106,6 +109,8 @@ function createToDoElement(todoObject) {
     // Mark completed toggle
     todoElement.addEventListener('click', () => {
         todoObject.completed = !todoObject.completed;
+
+        placeInStorage(getProjectObjects());
         renderTodos();
     });
 
@@ -113,6 +118,8 @@ function createToDoElement(todoObject) {
     trashBin.addEventListener('click', (e) => {
         e.stopPropagation();
         todoObject.project.removeTodo(todoObject.id);
+
+        placeInStorage(getProjectObjects());
         renderTodos();
     });
 

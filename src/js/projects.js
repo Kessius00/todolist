@@ -3,7 +3,7 @@ import trashIcon from "../assets/trash.svg";
 import {projectObjects, Project ,setActiveProject, getProjectObjects} from "./classes.js";
 import {renderTodos} from "./todos.js";
 import { createDeletionForm, createProjectForm } from "./project-forms.js";
-// import { placeInStorage} from "./storage.js";
+import { placeInStorage} from "./storage.js";
 
 
 function renderAddProjectBtn(){
@@ -26,8 +26,9 @@ function renderAddProjectBtn(){
                 const newProjectObject = new Project(projectName);
 
                 // Set the new project as active
-                setActiveProject(newProjectObject, projectObjects); 
-
+                newProjectObject.active = true;
+                // Set the active project in the projectObjects array
+                
                 // Add the new project to the projectObjects array
                 addProject(newProjectObject); // Add the new project to the DOM
 
@@ -83,6 +84,7 @@ function createProjectElement(projectObject) {
     projectElement.addEventListener("click", () => {
         setActiveProject(projectObject, projectObjects);
         updateActiveProjectClass(projectElement);
+        placeInStorage(getProjectObjects());
         renderProjects(); // Re-render the projects
         renderTodos(); // Re-render the todos for the active project
     });
@@ -116,6 +118,8 @@ function createProjectElement(projectObject) {
                 renderTodos();
                 document.querySelector(".current-project-title>h1").textContent = "No projects remaining... (•́︵•̀)";
             }
+
+            placeInStorage(getProjectObjects());
         });
     });
     
@@ -124,7 +128,7 @@ function createProjectElement(projectObject) {
 
 export function addProject(newProject) {
     projectObjects.push(newProject);
-    // placeInStorage(projectObjects); 
+    placeInStorage(projectObjects); 
     renderTodos();
     console.log("LocalStorage after adding project:", localStorage.getItem("projects"));
 }
