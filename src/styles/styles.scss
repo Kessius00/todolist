@@ -168,6 +168,13 @@ img{
 
 
     .todo-container{
+
+        .todo-btn-and-todos{
+            @include flex-column;
+            justify-content: flex-start;
+            // align-items: center;
+        }
+
         @include flex-column;
         justify-content: space-between;
         align-items: stretch;
@@ -308,6 +315,8 @@ button.add-todo{
 }
 
 
+
+
 .todo-form-container{
     @include form-container;
 
@@ -362,8 +371,41 @@ button.add-todo{
     }
 }
 
+button.toggle-order{
+    width:30px;
+    height: 15px;
+    font-size: .8em;
+    position: relative;
+
+    padding: 10px 35px;
+    margin-left: auto;
+    margin-top: -30px;
+    margin-bottom: 10px;
+    border: $dark-purple 1px solid;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .hidden{
     display: none;
+}
+.button-ondate{
+    background-color: $dark-purple;
+    color: $purply-white;
+    &:hover{
+        background-color: $purply-white;
+        color: $dark-purple;
+    }
+}
+.button-onpriority{
+    background-color: $purply-white;
+    color: $dark-purple;
+    &:hover{
+        background-color: $purply-white;
+        color: $dark-purple;
+    }
 }
 
 .footer{

@@ -1,7 +1,4 @@
-
-import {Todo, Project} from "./classes.js";
-
-
+// This module handles saving and retrieving project data from local storage.
 
 export function placeInStorage(projectObjects) {
 
@@ -54,26 +51,4 @@ export function getStorageList() {
     }
 }
 
-export function createProjectObjectsFromStorage(){
-    const storedList = getStorageList();
-    const projectObjects = [];
-    storedList.forEach(projectData => {
-        const project = new Project(projectData.title);
-        project.active = projectData.active;
-        project.id = projectData.id;
-        projectData.todos.forEach(todoData => {
-            const todo = new Todo(todoData.title, new Date(todoData.dueDate), todoData.priority);
-            todo.completed = todoData.completed;
-            todo.id = todoData.id;
-        });
-        projectObjects.push(project);
-    });
-    // Assign the project to each todo
-    projectObjects.forEach(project => {
-        project.todos.forEach(todo => {
-            todo.project = project;
-        });
-    });
-    return projectObjects;
-}
 

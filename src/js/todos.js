@@ -126,6 +126,76 @@ function createToDoElement(todoObject) {
     return todoElement;
 }
 
+
+// function buttonOrder(){
+//     // everytime active project changes, the order button should be reset to date
+//     const orderBtn = document.querySelector('button.toggle-order');
+//     const todosContainer = document.querySelector('.todos');
+//     const todos = Array.from(todosContainer.children);
+
+//     orderBtn.addEventListener('click', () => {
+//         // Sort the todos based on the priority attribute
+//         orderBtn.classList.toggle('button-ondate');
+//         orderBtn.classList.toggle('button-onpriority');
+
+//         const activeProject = checkActiveProject(getProjectObjects());
+//         if (!activeProject) return 0;
+//         const todosInProject = activeProject.todos;
+//         const completedTodos = todosInProject.filter(todo => todo.completed);
+//         const notCompletedTodos = todosInProject.filter(todo => !todo.completed);
+
+//         const sortDateTodosInDom = () => {
+//             const sortedTodos = notCompletedTodos.sort((a, b) => {
+//                 const dateA = new Date(a.dueDate);
+//                 const dateB = new Date(b.dueDate);
+//                 return dateA - dateB;
+//             }
+//             );
+//             const sortedTodoOrder = sortedTodos.concat(completedTodos);
+//             todosContainer.innerHTML = '';
+
+//             sortedTodoOrder.forEach(todo => {
+//                 const todoElement = createToDoElement(todo);
+//                 todosContainer.appendChild(todoElement);
+//             }
+//             );
+//         }
+
+
+//         const sortTodosByPriority = (todos) => {
+//             let todoCompleted = [];
+//             let todoNotCompleted = [];
+
+//             todos.forEach(todo => {
+//                 if (todo.classList.contains('completed')) {
+//                     todoCompleted.push(todo);
+//                 } else {
+//                     todoNotCompleted.push(todo);
+//                 }
+//             });
+
+//             const sortedTodos = todoNotCompleted.sort((a, b) => {
+//                 const priorityA = parseInt(a.getAttribute('data-priority'));
+//                 const priorityB = parseInt(b.getAttribute('data-priority'));
+//                 return priorityA - priorityB;
+//             });
+
+//             sortedTodos = sortedTodos.concat(todoCompleted);
+//         }
+            
+
+//         if (orderBtn.textContent === 'date') {
+//             orderBtn.textContent = 'priority';
+//             sortTodosByPriority(todos);
+//         } else {
+//             orderBtn.textContent = 'date';
+//             sortDateTodosInDom();
+//         }
+//     });
+// }
+
+// buttonOrder();
+
 function renderTodos() {
     const todosContainer = document.querySelector('.todos');
     todosContainer.innerHTML = '';
